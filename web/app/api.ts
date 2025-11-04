@@ -18,4 +18,11 @@ export async function postApi<T>(path: string, body: Record<string, any>): Promi
     body: JSON.stringify(body),
   });
   return response.json();
-} 
+}
+
+export async function generateKeyPair() {
+  const pair = await crypto.subtle.generateKey({ name: 'ecdsa', namedCurve: 'P-256' }, true, ['sign', 'verify', 'encrypt', 'decrypt']);
+  const prvKeyBuffer = await crypto.subtle.exportKey('raw', pair.privateKey), pubKeyBuffer = await crypto.subtle.exportKey('raw', pair.publicKey);
+  // TODO
+  return pair;
+}
