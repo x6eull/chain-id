@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import type { Route } from "./+types/home";
 import { getApi } from "~/api";
 import { useState } from "react";
@@ -17,7 +17,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   // const isLoggedIn = typeof loaderData.currentUser?.id === 'number';
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (<Stack height='100vh' direction='column' justifyContent='space-between' p='4rem 8rem'>
-    <Typography variant='h3' align="center" color="primary">欢迎使用</Typography>
+    <Stack direction='column' spacing={2}>
+      <Typography variant='h3' align="center">欢迎使用</Typography>
+      <Typography variant='h5' align="center" color="primary">分布式个人信息授权系统</Typography>
+    </Stack>
     <Stack direction='column' spacing={2}>
       {isLoggedIn ? (<>
         <Grid container direction='row' spacing={2}>
