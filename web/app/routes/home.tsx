@@ -16,7 +16,6 @@ export async function clientLoader({ }: Route.ClientLoaderArgs) {
 export default function Home({ loaderData }: Route.ComponentProps) {
   // const isLoggedIn = typeof loaderData.currentUser?.id === 'number';
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
   return (<Stack height='100vh' direction='column' justifyContent='space-between' p='4rem 8rem'>
     <Typography variant='h3' align="center" color="primary">欢迎使用</Typography>
     <Stack direction='column' spacing={2}>
@@ -36,38 +35,19 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </Grid>
 
         <Grid container direction='row' spacing={2}>
-          <Grid size={6}>
-            <Button fullWidth variant="contained" onClick={() => setOtpDialogOpen(true)}>获取OTP</Button>
-            <Dialog
-              open={otpDialogOpen}
-              onClose={() => setOtpDialogOpen(false)}
-            >
-              <DialogTitle>
-                生成新的一次性密码
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  即将生成新的一次性密码（OTP）。
-                  <br />
-                  OTP可在合作网站使用以进行手机号绑定。绑定后其可随时查询您的手机号。
-                  <br />
-                  生成新OTP会使旧OTP失效。
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setOtpDialogOpen(false)}>取消</Button>
-                <Button onClick={() => setOtpDialogOpen(false)} autoFocus>生成</Button>
-              </DialogActions>
-            </Dialog>
+          <Grid size={6} >
+            <Button href="/thirdparty" fullWidth variant="contained">前往第三方网站</Button>
           </Grid>
           <Grid size={6} >
             <Button fullWidth variant="contained">查询授权列表</Button>
           </Grid>
         </Grid>
 
-        <Button href="/thirdparty" fullWidth variant="contained">前往第三方网站</Button>
       </>) : (
-        <Button onClick={() => setIsLoggedIn(!isLoggedIn)} fullWidth variant="contained" color="primary">登录</Button>
+        <Stack direction='row' spacing={2}>
+          <Button onClick={() => setIsLoggedIn(!isLoggedIn)} fullWidth variant="contained" color="primary">注册</Button>
+          <Button onClick={() => setIsLoggedIn(!isLoggedIn)} fullWidth variant="contained" color="primary">登录</Button>
+        </Stack>
       )}
 
     </Stack>
