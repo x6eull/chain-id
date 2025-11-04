@@ -8,12 +8,24 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { Container } from "@mui/material";
+import { Container, createTheme, ThemeProvider, useMediaQuery } from "@mui/material";
+import { useMemo } from "react";
 
 export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
+
   return (
     <html lang="zh">
       <head>
@@ -23,9 +35,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Container className="app" maxWidth="md">
-          {children}
-        </Container>
+        <ThemeProvider theme={theme}>
+          <Container className="app" maxWidth="md">
+            {children}
+          </Container>
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

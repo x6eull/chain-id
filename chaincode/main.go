@@ -1,7 +1,8 @@
 package chaincode
 
 import (
-	"crypto/ecdsa"
+	"crypto"
+	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/hex"
@@ -29,9 +30,13 @@ func (c *CC) InitLedger(ctx contractapi.TransactionContextInterface) error {
 }
 
 func (c *CC) PutAddrMapping(ctx contractapi.TransactionContextInterface, derBytes []byte) error {
-	_, err := x509.ParsePKIXPublicKey(derBytes)
+	parsedKey, err := x509.ParsePKIXPublicKey(derBytes)
 	if err != nil {
 		return err
+	}
+	_, ok := parsedKey.(*rsa.PublicKey)
+	if !ok {
+		return errors.New("only RSA public keys are supported")
 	}
 	h := sha256.Sum256(derBytes)
 	hashHex := hex.EncodeToString(h[:])
@@ -56,10 +61,7 @@ func (c *CC) CheckSign(ctx contractapi.TransactionContextInterface, addr string,
 		return err
 	}
 	hash := sha256.Sum256(rawDataToHashAndSign)
-	if !ecdsa.VerifyASN1(pubKey.(*ecdsa.PublicKey), hash[:], sign) {
-		return errors.New("invalid signature")
-	}
-	return nil
+	return rsa.VerifyPKCS1v15(pubKey.(*rsa.PublicKey), crypto.SHA256, hash[:], sign)
 }
 
 // 此方法既可以新增也可以修改现有记录
